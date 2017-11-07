@@ -1,0 +1,125 @@
+﻿@using X.PagedList.Mvc;
+@using X.PagedList;
+@model IEnumerable<RestauranteApp.Models.Prato>
+
+
+@{
+    ViewBag.Title = "Pratos";
+}
+<link href="~/Content/sweetalert.css" rel="stylesheet" />
+
+<h2>Pratos</h2>
+
+<style>
+    .red {
+        color: red;
+    }
+</style>
+
+<fieldset class="custom-border">
+    <legend class="custom-border"></legend>
+
+    <div class="col-md-10">
+
+        @using (Html.BeginForm(FormMethod.Post))
+        {
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-success"
+                        onclick="location.href='@Url.Action("Create")';return false;">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Cadastrar Novo Prato
+                </button>
+            </div>
+        }
+
+    </div>
+
+</fieldset>
+
+<table class="table table-striped table-bordered">
+
+    <tr>
+        <th>
+
+        </th>
+        <th>
+
+        </th>
+        <th>
+            Restaurante
+        </th>
+        <th>
+            Prato
+        </th>
+        <th>
+            Preço
+        </th>
+    </tr>
+    @foreach (var prato in ViewBag.PaginaDePratos)
+    {
+
+        <tr>
+            <td width="5%" align="center">
+                <a href="#" class="glyphicon glyphicon-trash red" name="excluir" id="@prato.PratoId"></a>
+            </td>
+            <td width="5%" align="center">
+                @Html.ActionLink(" ", "Edit", new { id = prato.RestauranteId }, new { @class = "glyphicon glyphicon-edit" })
+            </td>
+            <td>
+                @prato.Restaurante.Nome
+            </td>
+            <td>
+                @prato.Nome
+            </td>
+            <td>
+                @prato.Preco
+            </td>
+        </tr>
+    }
+</table>
+
+    @Html.PagedListPager((IPagedList)ViewBag.PaginaDePratos, page => Url.Action("Index", new { page }))
+
+@section Scripts{
+
+    <script src="~/Scripts/sweetalert.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $("a[name='excluir']").on("click", function (e) {
+                
+                var id = $(this).attr('id');
+
+                swal({
+                    title: "Deseja excluir esse registro ?",
+                    text: "Apagar registro",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "Sim, realizar exclusão!",
+                    cancelButtonText: "Não, cancelar exclusão",
+                    closeOnConfirm: false,
+                    closeOnCancel: true
+                },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            
+                            $.ajax({
+                                type: "POST",
+                                url: "/Pratos/Delete/" + id,
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                success: function() {  },
+                                error: function() { }
+                            });
+                            
+                            swal("Excluído!", "Registro excluído com sucesso !", "success");
+                            location.reload();
+                        } 
+                    });
+
+            });
+        });
+
+    </script>
+} 

@@ -1,0 +1,48 @@
+﻿@model RestauranteApp.Models.Restaurante
+@{
+    ViewBag.Title = "Cadastro de Restaurante";
+}
+
+<link href="~/Content/sweetalert/sweet-alert.css" rel="stylesheet" />  
+<h2>Cadastro de Restaurante</h2>
+<div class="container">
+    <fieldset class="custom-border">
+        <legend class="custom-border">Dados</legend>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.RestauranteId)
+
+                <div class="form-group">
+                    <div class="col-md-4">
+                        @Html.Label("Nome do restaurante:", htmlAttributes: new { @class = "control-label" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+
+                        <button type="button" value="Cancelar" class="btn btn-danger"
+                                onclick="location.href='@Url.Action("Index")';return false;">
+                            <span class="glyphicon glyphicon-repeat"></span>
+                            Cancelar
+                        </button>
+                        <button type="submit" value="Create" class="btn btn-success">
+                            <span class="glyphicon glyphicon-floppy-disk"></span>
+                            Salvar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </fieldset>
+</div>
+
